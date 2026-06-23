@@ -91,5 +91,106 @@
 	};
 </script>
 <script type='text/javascript' src='https://goodyearmvp--elevatedev.sandbox.my.site.com/ESWGYServiceChatSuppor1779987171907/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+
+    <!-- GYChatChipRelayv5 — auto-message + chip-click relay (verbatim copy of the Salesforce static resource) -->
+    <script type='text/javascript'>
+(function () {
+    // Prevent the script from initializing multiple times
+    if (window.goodyearChatChipRelayInitialized) {
+        return;
+    }
+    window.goodyearChatChipRelayInitialized = true;
+
+    var allowedOrigins = [
+        'https://goodyearmvp--elevatedev.sandbox.my.site.com'
+    ];
+
+    // Helper: Safely wait for the Chat API to be ready before sending any messages
+    function waitForSendTextMessage(callback, retryCount) {
+        retryCount = retryCount || 0;
+
+        if (
+            window.embeddedservice_bootstrap &&
+            window.embeddedservice_bootstrap.utilAPI &&
+            typeof window.embeddedservice_bootstrap.utilAPI.sendTextMessage === 'function'
+        ) {
+            callback(window.embeddedservice_bootstrap.utilAPI.sendTextMessage);
+            return;
+        }
+
+        if (retryCount >= 20) {
+            console.error('[Goodyear Chat Relay] sendTextMessage is still not available.');
+            return;
+        }
+
+        setTimeout(function () {
+            waitForSendTextMessage(callback, retryCount + 1);
+        }, 250);
+    }
+
+// =======================================================================
+    // FEATURE 1: Send automatic message when bot first joins
+    // =======================================================================
+    window.addEventListener("onEmbeddedMessagingFirstBotMessageSent", function() {
+        console.log("[Goodyear Chat Relay] Received onEmbeddedMessagingFirstBotMessageSent event.");
+
+        // ADDED: A 1-second delay to prevent the race condition
+        setTimeout(function() {
+            console.log("[Goodyear Chat Relay] Delay complete, attempting to send auto-message...");
+
+            waitForSendTextMessage(function (sendTextMessage) {
+                sendTextMessage
+                    .call(window.embeddedservice_bootstrap.utilAPI, "[Initializing Main Menu...]")
+                    .then(function () {
+                        console.log("[Goodyear Chat Relay] Auto-Message sent successfully.");
+                    })
+                    .catch(function (error) {
+                        console.error("[Goodyear Chat Relay] Auto-Message failed:", error);
+                    });
+            });
+        }, 1000); // 1000 milliseconds = 1 second
+    });
+
+    // =======================================================================
+    // FEATURE 2: Listen for Chip clicks from the LWC and send them
+    // =======================================================================
+    window.addEventListener('message', function (event) {
+        // Security check
+        if (allowedOrigins.indexOf(event.origin) === -1) {
+            return;
+        }
+
+        var data = event.data;
+
+        // Ensure the message is actually from our LWC chip component
+        if (!data || data.type !== 'goodyear.chatChipSelected') {
+            return;
+        }
+
+        var selectedValue = data.payload && data.payload.value;
+
+        if (!selectedValue) {
+            console.error('[Goodyear Chat Relay] No selected value received.');
+            return;
+        }
+
+        console.log('[Goodyear Chat Relay] Received chip selection:', selectedValue);
+
+        // Send the chip text into the chat
+        waitForSendTextMessage(function (sendTextMessage) {
+            sendTextMessage
+                .call(window.embeddedservice_bootstrap.utilAPI, selectedValue)
+                .then(function () {
+                    console.log('[Goodyear Chat Relay] Sent chip text to chat:', selectedValue);
+                })
+                .catch(function (error) {
+                    console.error('[Goodyear Chat Relay] sendTextMessage failed:', error);
+                });
+        });
+    });
+
+    console.log('[Goodyear Chat Relay] Initialized with auto-message and LWC listener.');
+})();
+</script>
 </body>
 </html>
