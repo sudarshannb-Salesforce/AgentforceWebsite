@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acme Tire Co.</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #1c2733;
+            background: #f5f7fa;
+            line-height: 1.55;
+        }
+        header {
+            background: #0b5394;
+            color: #fff;
+            padding: 14px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        header .logo { font-weight: 700; font-size: 1.25rem; }
+        header nav a { color: #fff; text-decoration: none; margin-left: 22px; opacity: .9; }
+        header nav a:hover { opacity: 1; text-decoration: underline; }
+        .hero {
+            background: linear-gradient(135deg, #0b5394 0%, #07365f 100%);
+            color: #fff;
+            padding: 64px 32px;
+            text-align: center;
+        }
+        .hero h1 { font-size: 2.4rem; margin: 0 0 12px; }
+        .hero p { font-size: 1.1rem; opacity: .92; max-width: 620px; margin: 0 auto; }
+        main { max-width: 1000px; margin: 0 auto; padding: 40px 24px 80px; }
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.06);
+            padding: 28px;
+            margin-bottom: 28px;
+        }
+        h2 { color: #07365f; margin-top: 0; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">🛞 Acme Tire Co.</div>
+        <nav>
+            <a href="#">Tires</a>
+            <a href="#">Services</a>
+            <a href="#">Rebates</a>
+            <a href="#">Store Locator</a>
+            <a href="#">Support</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Welcome to Acme Tire Co.</h1>
+        <p>A simple public test page for embedding the Goodyear service agent.</p>
+    </section>
+
+    <main>
+        <div class="card">
+            <h2>Quality tires & service</h2>
+            <p>Browse tires, check rebates, find a store, and get help — all in one place.</p>
+        </div>
+        <div class="card">
+            <h2>Need help?</h2>
+            <p>Use the chat in the corner to talk to our service agent.</p>
+        </div>
+    </main>
+
+    <!-- Embedded Messaging snippet -->
+    <script type='text/javascript'>
+	function initEmbeddedMessaging() {
+		try {
+			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
+
+			embeddedservice_bootstrap.init(
+				'00DTI000002wPxm',
+				'GY_Service_Chat_Support',
+				'https://goodyearmvp--elevatedev.sandbox.my.site.com/ESWGYServiceChatSuppor1779987171907',
+				{
+					scrt2URL: 'https://goodyearmvp--elevatedev.sandbox.my.salesforce-scrt.com'
+				}
+			);
+		} catch (err) {
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
+</script>
+<script type='text/javascript' src='https://goodyearmvp--elevatedev.sandbox.my.site.com/ESWGYServiceChatSuppor1779987171907/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+</body>
+</html>
